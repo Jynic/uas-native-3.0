@@ -50,7 +50,7 @@ class HomeFragment : Fragment() {
                 ceritas = Gson().fromJson(data.toString(), sType)as ArrayList<Cerita>
                 Log.d("apiresult", ceritas.toString())
             }
-
+                updateList()
             Log.d("cekisiarray", ceritas.toString())
         },
             Response.ErrorListener {
@@ -64,7 +64,8 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
