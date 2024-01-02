@@ -44,39 +44,37 @@ class CreateFragment : ListFragment() {
         val q = Volley.newRequestQueue(activity)
         val url = "https://ubaya.me/native/160421054/create-cerita.php"
 
-        val stringRequest = object : StringRequest(
-            Method.POST, url,
-            Response.Listener<String> { response ->
-                Log.d("apiresult", response)
-                try {
-                    val obj = JSONObject(response)
-                    if (obj.getString("result") == "OK") {
-                        val data = obj.getJSONArray("data")
-                        val sType = object : TypeToken<List<Cerita>>() {}.type
-                        ceritas = Gson().fromJson(data.toString(), sType) as ArrayList<Cerita>
-                        Log.d("apiresult", ceritas.toString())
+        var stringRequest = StringRequest(
+            Request.Method.POST, url,
+            Response.Listener<String> {
+                Log.d("apiresult", it)
+                val obj = JSONObject(it)
+                if(obj.getString("result") == "OK") {
+                    val data = obj.getJSONArray("data")
+                    val sType = object : TypeToken<List<Cerita>>() { }.type
+                    ceritas = Gson().fromJson(data.toString(), sType) as
+                            ArrayList<Cerita>
+                    Log.d("apiresult", ceritas.toString())
+                    for(i in 0 until data.length()) {
+                        val playObj = data.getJSONObject(i)
+                        val cerita = Cerita(
+                            playObj.setInt("id"),
+                            playObj.setString("title"),
+                            playObj.setString("subtitle"),
+                            playObj.setString("description"),
+                            playObj.setString("image_url"),
+                            playObj.setInt("num_likes")
+                        )
+                        ceritas.add(cerita)
                     }
                     addList()
                     Log.d("cekisiarray", ceritas.toString())
-                } catch (e: JSONException) {
-                    e.printStackTrace()
                 }
-            },
-            Response.ErrorListener { error ->
-                Log.e("apiresult", error.message.toString())
-            }) {
-            override fun getParams(): MutableMap<String, String> {
-                val params = HashMap<String, String>()
-                params["judul"] = "your_judul_value"//belum
-                params["penulis"] = "your_penulis_value"
-                params["desc"] = "your_desc_value"
-                params["foto"] = "your_foto_value"
-                params["access"] = "your_access_value"
-                params["genre"] = "your_genre_value"
-                return params
-            }
-        }
 
+            },
+            Response.ErrorListener {
+                Log.e("apiresult", it.message.toString())
+            })
         q.add(stringRequest)
     }
 
