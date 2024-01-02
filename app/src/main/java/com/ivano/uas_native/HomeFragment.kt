@@ -77,7 +77,7 @@ class HomeFragment : Fragment() {
         with(binding.recycleView) {
             layoutManager = lm
             setHasFixedSize(true)
-            adapter = CeritaAdapter(ceritas)
+            adapter = CeritaAdapter(ceritas, this.context)
         }
     }
 
