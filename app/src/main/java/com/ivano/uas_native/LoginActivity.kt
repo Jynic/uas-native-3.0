@@ -1,6 +1,8 @@
 package com.ivano.uas_native
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -36,6 +38,15 @@ class LoginActivity : AppCompatActivity() {
                     if(obj.getString("result") == "OK") {
                         get_id = obj.getInt("data")
 
+                        // Store user data in SharedPreferences
+                        val loginaccount = getSharedPreferences("loginaccount", Context.MODE_PRIVATE)
+                        val editor = loginaccount.edit()
+
+                        editor.putInt("id", get_id)
+                        editor.putString("name", obj.getString("name"))
+                        editor.putString("img_url", obj.getString("img_url"))
+                        editor.apply()
+
                         Log.d("apiresult", get_id.toString())
                         updateList()
                     }
@@ -57,8 +68,6 @@ class LoginActivity : AppCompatActivity() {
 
     fun updateList() {
         val intent = Intent(this, MainActivity::class.java)
-        intent.putExtra(LoginActivity.idUser, get_id)
-
         startActivity(intent)
     }
 
