@@ -1,5 +1,6 @@
 package com.ivano.uas_native
 
+import PrefFragment
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,12 +10,15 @@ import com.ivano.uas_native.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
     private lateinit var binding:ActivityMainBinding
     val fragment: ArrayList<Fragment> = ArrayList()
+    val iduser = "1"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         fragment.add(HomeFragment())
+        fragment.add(PrefFragment())
+
         binding.viewPager.adapter = MyAdapter(this, fragment)
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
             override fun onPageSelected(position: Int) {

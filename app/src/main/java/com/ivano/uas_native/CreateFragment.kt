@@ -1,11 +1,15 @@
 package com.ivano.uas_native
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.ListFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.Request
@@ -14,7 +18,9 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.ivano.uas_native.databinding.FragmentCreateBinding
 import com.ivano.uas_native.databinding.FragmentHomeBinding
+import com.ivano.uas_native.databinding.FragmentPrefBinding
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -32,7 +38,7 @@ class CreateFragment : ListFragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    private lateinit var binding : FragmentHomeBinding
+    private lateinit var binding: FragmentCreateBinding
     var ceritas:ArrayList<Cerita> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,64 +47,67 @@ class CreateFragment : ListFragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-//        val q = Volley.newRequestQueue(activity)
-//        val url = "https://ubaya.me/native/160421054/create-cerita.php"
-//
-//        var stringRequest = StringRequest(
-//            Request.Method.POST, url,
-//            Response.Listener<String> {
-//                Log.d("apiresult", it)
-//                val obj = JSONObject(it)
-//                if(obj.getString("result") == "OK") {
-//                    val data = obj.getJSONArray("data")
-//                    val sType = object : TypeToken<List<Cerita>>() { }.type
-//                    ceritas = Gson().fromJson(data.toString(), sType) as
-//                            ArrayList<Cerita>
-//                    Log.d("apiresult", ceritas.toString())
-//                    for(i in 0 until data.length()) {
-//                        val playObj = data.getJSONObject(i)
-//                        val cerita = Cerita(
-//                            playObj.setInt("id"),
-//                            playObj.setString("title"),
-//                            playObj.setString("subtitle"),
-//                            playObj.setString("description"),
-//                            playObj.setString("image_url"),
-//                            playObj.setInt("num_likes"),
-//
-//                        )
-//                        ceritas.add(cerita)
-//                    }
-//                    addList()
-//                    Log.d("cekisiarray", ceritas.toString())
-//                }
-//
-//            },
-//            Response.ErrorListener {
-//                Log.e("apiresult", it.message.toString())
-//            })
-//        q.add(stringRequest)
+
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_create, container, false)
+        binding = FragmentCreateBinding.inflate(inflater, container, false)
         return binding.root
     }
 
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val btnNextCreate1 = view.findViewById<Button>(R.id.btnNextCreate1)
+        val id = (activity as MainActivity).iduser.toInt()
+
+        btnNextCreate1.setOnClickListener {
+            val title = binding.txtTitle.text.toString()
+            val desc = binding.txtDescCreate.text.toString()
+            val urlCreate = binding.txtUrlCreate.text.toString()
+            val genre = binding.spinGenre.selectedItem.toString()
+            CreateCerbung(id, title, desc, urlCreate, genre)
+        }
     }
 
-    fun addList() {
-        val lm = LinearLayoutManager(activity)
-        with(binding.recycleView) {
-            layoutManager = lm
-            setHasFixedSize(true)
-            adapter = CeritaAdapter(ceritas, this.context)
+    private fun CreateCerbung(idUser: Int, title:String, desc: String, urlCreate: String, genre: String) {
+        val q = Volley.newRequestQueue(requireContext())
+        val url = "https://ubaya.me/native/160421054/create-cerita.php"
+
+        val stringRequest = object : StringRequest(
+            Request.Method.POST, url,
+            { response ->
+                val obj = JSONObject(response)
+                if (obj.getString("result") == "OK") {
+                    // Password successfully updated
+                    Toast.makeText(requireContext(), "Cerita Added successfully", Toast.LENGTH_SHORT).show()
+                } else {
+                    // Handle the case where the password update failed
+                    Toast.makeText(requireContext(), "Failed to Add Cerita", Toast.LENGTH_SHORT).show()
+                }
+            },
+            { error ->
+                // Handle errors or exceptions here
+                Log.e("AddCeritaError", error.printStackTrace().toString())
+                Toast.makeText(requireContext(), "Error Creating Cerita", Toast.LENGTH_SHORT).show()
+            }
+        ) {
+            override fun getParams(): MutableMap<String, String>? {
+                val params = HashMap<String, String>()
+                params["id"] = idUser.toString()
+                params["title"] = title
+                params["desc"] = desc
+                params["url"] = urlCreate
+                params["genre"] = genre
+                return params
+            }
         }
+
+        q.add(stringRequest)
     }
 
     companion object {

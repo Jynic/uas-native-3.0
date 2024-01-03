@@ -23,6 +23,9 @@ class ParagrafAdapter(val paragrafs:ArrayList<Paragraf>): RecyclerView.Adapter<P
         with(holder.binding){
             txtParagraf.text = paragrafs[position].paragraf.toString()
             txtPenulisParagraf.text = paragrafs[position].name.toString()
+            btnLikeRead.setOnClickListener{
+
+            }
         }
 
     }

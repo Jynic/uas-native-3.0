@@ -37,7 +37,6 @@ class CeritaAdapter(val ceritas:ArrayList<Cerita>, val context : Context): Recyc
                 val activity : AppCompatActivity = context as AppCompatActivity
                 val bundle_cerita = Bundle()
                 bundle_cerita.putString("index_cerita", ceritas[position].index.toString())
-                Toast.makeText(activity, ceritas[position].index.toString(), Toast.LENGTH_SHORT).show()
                 bundle_cerita.putString("judul_cerita", ceritas[position].judul)
                 bundle_cerita.putString("penulis_cerita", ceritas[position].name)
                 bundle_cerita.putString("foto_cerita", ceritas[position].foto)
