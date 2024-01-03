@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/itemHome"
         android:layout_width="wrap_content"
@@ -7,7 +8,8 @@
         android:enabled="true"
         android:icon="@drawable/baseline_home_24"
         android:title="Home"
-        android:visible="true" />
+        android:visible="true"
+        app:showAsAction="always" />
     <item
         android:id="@+id/itemFollowing"
         android:layout_width="wrap_content"
@@ -15,7 +17,8 @@
         android:enabled="true"
         android:icon="@drawable/baseline_format_list_numbered_24"
         android:title="Following"
-        android:visible="true" />
+        android:visible="true"
+        app:showAsAction="always" />
     <item
         android:id="@+id/itemCreate"
         android:layout_width="wrap_content"
@@ -23,7 +26,8 @@
         android:enabled="true"
         android:icon="@drawable/baseline_post_add_24"
         android:title="Create"
-        android:visible="true" />
+        android:visible="true"
+        app:showAsAction="always" />
     <item
         android:id="@+id/itemUsers"
         android:layout_width="wrap_content"
@@ -31,7 +35,8 @@
         android:enabled="true"
         android:icon="@drawable/baseline_groups_24"
         android:title="Users"
-        android:visible="true" />
+        android:visible="true"
+        app:showAsAction="always" />
     <item
         android:id="@+id/itemPrefs"
         android:layout_width="wrap_content"
@@ -40,5 +45,5 @@
         android:icon="@drawable/baseline_settings_24"
         android:title="Prefs"
         android:visible="true"
-        />
+        app:showAsAction="always" />
 </menu>

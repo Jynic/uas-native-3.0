@@ -15,6 +15,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         fragment.add(HomeFragment())
+        fragment.add(ReadFragment())
+
         binding.viewPager.adapter = MyAdapter(this, fragment)
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
             override fun onPageSelected(position: Int) {
