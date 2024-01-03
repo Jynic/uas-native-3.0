@@ -41,41 +41,42 @@ class CreateFragment : ListFragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-        val q = Volley.newRequestQueue(activity)
-        val url = "https://ubaya.me/native/160421054/create-cerita.php"
-
-        var stringRequest = StringRequest(
-            Request.Method.POST, url,
-            Response.Listener<String> {
-                Log.d("apiresult", it)
-                val obj = JSONObject(it)
-                if(obj.getString("result") == "OK") {
-                    val data = obj.getJSONArray("data")
-                    val sType = object : TypeToken<List<Cerita>>() { }.type
-                    ceritas = Gson().fromJson(data.toString(), sType) as
-                            ArrayList<Cerita>
-                    Log.d("apiresult", ceritas.toString())
-                    for(i in 0 until data.length()) {
-                        val playObj = data.getJSONObject(i)
-                        val cerita = Cerita(
-                            playObj.setInt("id"),
-                            playObj.setString("title"),
-                            playObj.setString("subtitle"),
-                            playObj.setString("description"),
-                            playObj.setString("image_url"),
-                            playObj.setInt("num_likes")
-                        )
-                        ceritas.add(cerita)
-                    }
-                    addList()
-                    Log.d("cekisiarray", ceritas.toString())
-                }
-
-            },
-            Response.ErrorListener {
-                Log.e("apiresult", it.message.toString())
-            })
-        q.add(stringRequest)
+//        val q = Volley.newRequestQueue(activity)
+//        val url = "https://ubaya.me/native/160421054/create-cerita.php"
+//
+//        var stringRequest = StringRequest(
+//            Request.Method.POST, url,
+//            Response.Listener<String> {
+//                Log.d("apiresult", it)
+//                val obj = JSONObject(it)
+//                if(obj.getString("result") == "OK") {
+//                    val data = obj.getJSONArray("data")
+//                    val sType = object : TypeToken<List<Cerita>>() { }.type
+//                    ceritas = Gson().fromJson(data.toString(), sType) as
+//                            ArrayList<Cerita>
+//                    Log.d("apiresult", ceritas.toString())
+//                    for(i in 0 until data.length()) {
+//                        val playObj = data.getJSONObject(i)
+//                        val cerita = Cerita(
+//                            playObj.setInt("id"),
+//                            playObj.setString("title"),
+//                            playObj.setString("subtitle"),
+//                            playObj.setString("description"),
+//                            playObj.setString("image_url"),
+//                            playObj.setInt("num_likes"),
+//
+//                        )
+//                        ceritas.add(cerita)
+//                    }
+//                    addList()
+//                    Log.d("cekisiarray", ceritas.toString())
+//                }
+//
+//            },
+//            Response.ErrorListener {
+//                Log.e("apiresult", it.message.toString())
+//            })
+//        q.add(stringRequest)
     }
 
     override fun onCreateView(
@@ -96,7 +97,7 @@ class CreateFragment : ListFragment() {
         with(binding.recycleView) {
             layoutManager = lm
             setHasFixedSize(true)
-            adapter = CeritaAdapter(ceritas)
+            adapter = CeritaAdapter(ceritas, this.context)
         }
     }
 

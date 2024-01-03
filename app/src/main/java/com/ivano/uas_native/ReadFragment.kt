@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 
 // TODO: Rename parameter arguments, choose names that match
@@ -40,7 +41,7 @@ class ReadFragment : Fragment() {
         val view =  inflater.inflate(R.layout.fragment_read, container, false)
         val judul = arguments?.getString("judul_cerita").toString()
         Toast.makeText(view.context, judul, Toast.LENGTH_SHORT).show()
-        R.id.txtJudulCerbung = judul.toString()
+        view.findViewById<TextView>(R.id.txtJudulCerbung).text = judul
         return view
     }
 
