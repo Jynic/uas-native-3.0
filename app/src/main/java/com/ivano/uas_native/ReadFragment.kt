@@ -65,7 +65,6 @@ class ReadFragment : Fragment() {
         val foto = arguments?.getString("foto_cerita").toString()
         val genre = arguments?.getString("genre_cerita").toString()
         val penulis = arguments?.getString("penulis_cerita").toString()
-        Toast.makeText(activity, iduser, Toast.LENGTH_SHORT).show()
         view.findViewById<TextView>(R.id.txtJudulCerbung).text = judul
         val imageView: ImageView = view.findViewById(R.id.image)
         Picasso.get().load(foto).into(imageView)
@@ -91,8 +90,6 @@ class ReadFragment : Fragment() {
                 Log.e("paragrafresult", it.message.toString())
             })
         p.add(stringRequest)
-        recyclerView = view.findViewById(R.id.recycleViewParagraf)
-        view.findViewById<Button>(R.id.btnLike)
         return view
 
 
