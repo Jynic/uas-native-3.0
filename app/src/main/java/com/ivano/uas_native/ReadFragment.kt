@@ -63,13 +63,13 @@ class ReadFragment : Fragment() {
         val foto = arguments?.getString("foto_cerita").toString()
         val genre = arguments?.getString("genre_cerita").toString()
         val penulis = arguments?.getString("penulis_cerita").toString()
-        Toast.makeText(view.context, judul, Toast.LENGTH_SHORT).show()
+        val iduser = (activity as MainActivity).iduser
+        Toast.makeText(activity, iduser, Toast.LENGTH_SHORT).show()
         view.findViewById<TextView>(R.id.txtJudulCerbung).text = judul
         val imageView: ImageView = view.findViewById(R.id.image)
         Picasso.get().load(foto).into(imageView)
         view.findViewById<TextView>(R.id.txtGenre).text = genre
         view.findViewById<TextView>(R.id.txtPenulisCerbung).text = penulis
-        Toast.makeText(view.context, idcerita, Toast.LENGTH_SHORT).show()
         paragrafs.clear()
         val p = Volley.newRequestQueue(activity)
         val url = "https://ubaya.me/native/160421054/read-paragraf-cerita.php?idcerbung="+idcerita.toString()
