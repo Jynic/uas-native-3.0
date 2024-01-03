@@ -1,5 +1,6 @@
 package com.ivano.uas_native
 
+import PrefFragment
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -15,7 +16,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         fragment.add(HomeFragment())
-        fragment.add(ReadFragment())
+        fragment.add(PrefFragment())
 
         binding.viewPager.adapter = MyAdapter(this, fragment)
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
