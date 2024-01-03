@@ -62,19 +62,19 @@ class CreateFragment : ListFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val btnNextCreate1 = view.findViewById<Button>(R.id.btnNextCreate1)
+        val id = (activity as MainActivity).iduser.toInt()
 
-        val userlogin = requireActivity().getSharedPreferences("loginaccount", Context.MODE_PRIVATE)
-        val id = userlogin.getInt("id", 0)
-
-        binding.btnNextCreate1.setOnClickListener {
+        btnNextCreate1.setOnClickListener {
             val title = binding.txtTitle.text.toString()
             val desc = binding.txtDescCreate.text.toString()
-            val url = binding.txtUrlCreate.text.toString()
+            val urlCreate = binding.txtUrlCreate.text.toString()
             val genre = binding.spinGenre.selectedItem.toString()
+            CreateCerbung(id, title, desc, urlCreate, genre)
         }
     }
 
-    private fun CreateCerbung(id: Int, title:String, desc: String, url: String, genre: String) {
+    private fun CreateCerbung(idUser: Int, title:String, desc: String, urlCreate: String, genre: String) {
         val q = Volley.newRequestQueue(requireContext())
         val url = "https://ubaya.me/native/160421054/create-cerita.php"
 
@@ -98,10 +98,10 @@ class CreateFragment : ListFragment() {
         ) {
             override fun getParams(): MutableMap<String, String>? {
                 val params = HashMap<String, String>()
-                params["id"] = id.toString()
+                params["id"] = idUser.toString()
                 params["title"] = title
                 params["desc"] = desc
-                params["url"] = url
+                params["url"] = urlCreate
                 params["genre"] = genre
                 return params
             }
