@@ -3,75 +3,102 @@ package com.ivano.uas_native
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.Request
+import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.ivano.uas_native.databinding.ActivityLoginBinding
 import org.json.JSONObject
 
 class LoginActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityLoginBinding
-    var get_id = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        val view = binding.root
+        setContentView(view)
 
-        binding.txtReg.setOnClickListener{
-            val intent= Intent(it.context, RegisterActivity::class.java)
-            it.context.startActivity(intent)
+        binding.btnLog.setOnClickListener {
+            try {
+                val username = binding.txtLoginName.text.toString()
+                val password = binding.txtLoginPass.text.toString()
+
+                if (username.isNotEmpty() && password.isNotEmpty()) {
+                    loginUser(username, password)
+                } else {
+                    Toast.makeText(this, "Masukkan Username dan Password", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(this, "Terjadi kesalahan: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
         }
 
-        binding.btnLog.setOnClickListener{
-            Log.d("name", binding.txtName.text.toString())
-            Log.d("pass", binding.txtPass.text.toString())
+        binding.txtReg.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+    }
 
-            val q = Volley.newRequestQueue(this)
-            val url = "https://ubaya.me/native/160421054/login.php"
-            val stringRequest = object: StringRequest(Request.Method.POST, url,
-                {
-                    val obj = JSONObject(it)
-                    if(obj.getString("result") == "OK") {
-                        get_id = obj.getInt("data")
+    private fun loginUser(username: String, password: String) {
+        val url = "https://ubaya.me/native/160421054/login.php"
 
-                        // Store user data in SharedPreferences
-                        val loginaccount = getSharedPreferences("loginaccount", Context.MODE_PRIVATE)
-                        val editor = loginaccount.edit()
+        val stringRequest = object : StringRequest(
+            Request.Method.POST,
+            url,
+            Response.Listener<String> { response ->
+                try {
+                    val jsonObject = JSONObject(response)
+                    Log.d("LoginActivity", "Server response: $response")
 
-                        editor.putInt("id", get_id)
-                        editor.putString("name", obj.getString("name"))
-                        editor.putString("img_url", obj.getString("img_url"))
+                    val result = jsonObject.getString("result")
+                    if (result == "success") {
+                        // Login berhasil
+                        Toast.makeText(this, "Login berhasil", Toast.LENGTH_SHORT).show()
+
+                        // Simpan User ID yang login
+                        val data = jsonObject.getJSONObject("data")
+                        val idUser = data.getInt("id")
+
+                        var sharedFile = "com.ivano.uas_native"
+                        var shared:SharedPreferences = getSharedPreferences(sharedFile, Context.MODE_PRIVATE)
+                        var editor: SharedPreferences.Editor = shared.edit()
+                        editor.putInt("ID", idUser)
                         editor.apply()
 
-                        Log.d("apiresult", get_id.toString())
-                        updateList()
+                        val intent = Intent(this, MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        // Pesan kesalahan dari server
+                        val message = jsonObject.optString("message", "Tidak ada pesan kesalahan")
+                        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
                     }
-                },
-                {
-                    Log.e("apierror", it.printStackTrace().toString())
+                } catch (e: Exception) {
+                    Log.e("LoginActivity", "Error parsing JSON: ${e.message}")
+                    Toast.makeText(this, "Terjadi kesalahan: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
-            ){
-                override fun getParams(): MutableMap<String, String>? {
-                    val params = HashMap<String, String>()
-                    params["name"] = binding.txtName.text.toString()
-                    params["password"] = binding.txtPass.text.toString()
-                    return params
-                }
+            },
+            Response.ErrorListener {
+                Log.e("LoginActivity", "Volley error: $it")
+                Toast.makeText(this, "Terjadi kesalahan jaringan", Toast.LENGTH_SHORT).show()
             }
-            q.add(stringRequest)
+        )
+        {
+            override fun getParams(): MutableMap<String, String> {
+                val params = HashMap<String, String>()
+                params["username"] = username
+                params["password"] = password
+                return params
+            }
         }
-    }
-
-    fun updateList() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-    }
-
-    companion object {
-        const val idUser = "ID"
+        // Tambahkan request ke queue Volley
+        Volley.newRequestQueue(this).add(stringRequest)
     }
 }
