@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -42,6 +43,7 @@ class ReadFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var recyclerView: RecyclerView
+    val iduser = (activity as MainActivity).iduser
     var paragrafs:ArrayList<Paragraf> = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +65,6 @@ class ReadFragment : Fragment() {
         val foto = arguments?.getString("foto_cerita").toString()
         val genre = arguments?.getString("genre_cerita").toString()
         val penulis = arguments?.getString("penulis_cerita").toString()
-        val iduser = (activity as MainActivity).iduser
         Toast.makeText(activity, iduser, Toast.LENGTH_SHORT).show()
         view.findViewById<TextView>(R.id.txtJudulCerbung).text = judul
         val imageView: ImageView = view.findViewById(R.id.image)
@@ -91,6 +92,7 @@ class ReadFragment : Fragment() {
             })
         p.add(stringRequest)
         recyclerView = view.findViewById(R.id.recycleViewParagraf)
+        view.findViewById<Button>(R.id.btnLike)
         return view
 
 
@@ -103,7 +105,7 @@ class ReadFragment : Fragment() {
         val lm = LinearLayoutManager(activity)
         recyclerView.layoutManager = lm
         recyclerView.setHasFixedSize(true)
-        recyclerView.adapter = ParagrafAdapter(paragrafs)
+        recyclerView.adapter = ParagrafAdapter(paragrafs, iduser)
     }
 
     companion object {

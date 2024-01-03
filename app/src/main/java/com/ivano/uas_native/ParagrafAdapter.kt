@@ -7,7 +7,7 @@ import com.ivano.uas_native.databinding.ActivityCardCerbungBinding
 import com.ivano.uas_native.databinding.ActivityCardParagrafBinding
 import com.ivano.uas_native.databinding.ActivityParagraphCardBinding
 
-class ParagrafAdapter(val paragrafs:ArrayList<Paragraf>): RecyclerView.Adapter<ParagrafAdapter.ParagrafViewHolder>()  {
+class ParagrafAdapter(val paragrafs:ArrayList<Paragraf>, val iduser:String): RecyclerView.Adapter<ParagrafAdapter.ParagrafViewHolder>()  {
     class ParagrafViewHolder(val binding: ActivityCardParagrafBinding):RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ParagrafViewHolder {
