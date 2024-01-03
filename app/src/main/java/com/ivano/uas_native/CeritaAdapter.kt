@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,12 +31,18 @@ class CeritaAdapter(val ceritas:ArrayList<Cerita>, val context : Context): Recyc
 
         with(holder.binding){
             txtJudul.text=ceritas[position].judul
-            txtPenulis.text=ceritas[position].penulis
+            txtPenulis.text=ceritas[position].name
             txtDesc.text =ceritas[position].desc
             buttonread.setOnClickListener{
                 val activity : AppCompatActivity = context as AppCompatActivity
                 val bundle_cerita = Bundle()
+                bundle_cerita.putString("index_cerita", ceritas[position].index.toString())
+                Toast.makeText(activity, ceritas[position].index.toString(), Toast.LENGTH_SHORT).show()
                 bundle_cerita.putString("judul_cerita", ceritas[position].judul)
+                bundle_cerita.putString("penulis_cerita", ceritas[position].name)
+                bundle_cerita.putString("foto_cerita", ceritas[position].foto)
+                bundle_cerita.putString("desc_cerita", ceritas[position].desc)
+                bundle_cerita.putString("genre_cerita", ceritas[position].genre)
                 val tujuan = ReadFragment()
                 tujuan.arguments = bundle_cerita
                 activity.supportFragmentManager.beginTransaction().replace(R.id.container, tujuan).addToBackStack(null).commit()

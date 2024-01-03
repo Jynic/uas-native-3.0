@@ -4,38 +4,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".CardCerbung">
 
     <androidx.cardview.widget.CardView
         android:layout_width="360dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="400dp">
+            android:layout_height="wrap_content">
 
             <Button
                 android:id="@+id/buttonread"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"
+                android:layout_marginTop="8dp"
                 android:text="Read"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.96"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtDesc" />
 
             <TextView
                 android:id="@+id/txtDesc"
                 android:layout_width="330dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="11dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="15dp"
                 android:text="mengisahkan tentang         seorang mahasiswa bernama alex yang secara         tidak sengaja menemukan sebuah buku kuno yang         misterius di perpustakaan universitasnya"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.052"
@@ -58,7 +59,7 @@
                 android:id="@+id/txtJumlahFollow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="18dp"
                 android:layout_marginTop="7dp"
                 android:drawableStart="@drawable/baseline_format_list_numbered_24"
                 android:text="13"
@@ -70,11 +71,10 @@
                 android:id="@+id/txtPenulis"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
                 android:layout_marginTop="7dp"
                 android:text="by Ivano Zefanya"
                 android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.052"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txtJudul" />
 
@@ -92,7 +92,7 @@
                 android:id="@+id/txtJudul"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="18dp"
                 android:layout_marginTop="24dp"
                 android:text="Rahasia Terkunci di Perpustakaan Kuno"
                 android:textSize="16sp"
