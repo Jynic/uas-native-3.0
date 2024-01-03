@@ -67,7 +67,7 @@ class ReadFragment : Fragment() {
         Picasso.get().load(foto).into(imageView)
         view.findViewById<TextView>(R.id.txtGenre).text = genre
         view.findViewById<TextView>(R.id.txtPenulisCerbung).text = penulis
-        recyclerView = view.findViewById(R.id.recycleViewParagraf)
+
         Toast.makeText(view.context, idcerita, Toast.LENGTH_SHORT).show()
 
         val p = Volley.newRequestQueue(activity)
@@ -89,7 +89,7 @@ class ReadFragment : Fragment() {
                 Log.e("paragrafresult", it.message.toString())
             })
         p.add(stringRequest)
-
+        recyclerView = view.findViewById(R.id.recycleViewParagraf)
         return view
 
 
