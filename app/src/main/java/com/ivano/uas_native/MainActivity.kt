@@ -17,6 +17,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         fragment.add(HomeFragment())
+        fragment.add(FollowingFragment())
+        fragment.add(CreateFragment())
         fragment.add(PrefFragment())
 
         binding.viewPager.adapter = MyAdapter(this, fragment)
@@ -25,7 +27,7 @@ class MainActivity : AppCompatActivity() {
                 binding.bottomNav.selectedItemId = binding.bottomNav.menu.getItem(position).itemId
             }
         })
-
+        
         binding.bottomNav.setOnItemSelectedListener {
             binding.viewPager.currentItem = when(it.itemId){
                 R.id.itemHome -> 0

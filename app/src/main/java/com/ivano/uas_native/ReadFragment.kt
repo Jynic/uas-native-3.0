@@ -43,7 +43,6 @@ class ReadFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var recyclerView: RecyclerView
-    val iduser = (activity as MainActivity).iduser
     var paragrafs:ArrayList<Paragraf> = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +51,6 @@ class ReadFragment : Fragment() {
         }
 
     }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -90,6 +88,7 @@ class ReadFragment : Fragment() {
                 Log.e("paragrafresult", it.message.toString())
             })
         p.add(stringRequest)
+        recyclerView = view.findViewById(R.id.recycleViewParagraf)
         return view
 
 
@@ -102,7 +101,7 @@ class ReadFragment : Fragment() {
         val lm = LinearLayoutManager(activity)
         recyclerView.layoutManager = lm
         recyclerView.setHasFixedSize(true)
-        recyclerView.adapter = ParagrafAdapter(paragrafs, iduser)
+        recyclerView.adapter = ParagrafAdapter(paragrafs)
     }
 
     companion object {

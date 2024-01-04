@@ -31,14 +31,14 @@ class CeritaAdapter(val ceritas:ArrayList<Cerita>, val context : Context): Recyc
 
         with(holder.binding){
             txtJudul.text=ceritas[position].judul
-            txtPenulis.text=ceritas[position].name
+            txtPenulis.text=ceritas[position].username
             txtDesc.text =ceritas[position].desc
             buttonread.setOnClickListener{
                 val activity : AppCompatActivity = context as AppCompatActivity
                 val bundle_cerita = Bundle()
                 bundle_cerita.putString("index_cerita", ceritas[position].index.toString())
                 bundle_cerita.putString("judul_cerita", ceritas[position].judul)
-                bundle_cerita.putString("penulis_cerita", ceritas[position].name)
+                bundle_cerita.putString("penulis_cerita", ceritas[position].username)
                 bundle_cerita.putString("foto_cerita", ceritas[position].foto)
                 bundle_cerita.putString("desc_cerita", ceritas[position].desc)
                 bundle_cerita.putString("genre_cerita", ceritas[position].genre)

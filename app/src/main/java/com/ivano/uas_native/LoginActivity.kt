@@ -57,20 +57,23 @@ class LoginActivity : AppCompatActivity() {
                     val jsonObject = JSONObject(response)
                     Log.d("LoginActivity", "Server response: $response")
 
-                    val result = jsonObject.getString("result")
-                    if (result == "success") {
+                    val result = jsonObject.getString("Result")
+                    if (result == "Success") {
                         // Login berhasil
                         Toast.makeText(this, "Login berhasil", Toast.LENGTH_SHORT).show()
 
                         // Simpan User ID yang login
-                        val data = jsonObject.getJSONObject("data")
+                        val data = jsonObject.getJSONObject("Data")
                         val idUser = data.getInt("id")
 
                         var sharedFile = "com.ivano.uas_native"
-                        var shared:SharedPreferences = getSharedPreferences(sharedFile, Context.MODE_PRIVATE)
+                        var shared: SharedPreferences = getSharedPreferences(sharedFile, Context.MODE_PRIVATE)
                         var editor: SharedPreferences.Editor = shared.edit()
                         editor.putInt("ID", idUser)
                         editor.apply()
+
+
+
 
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
@@ -85,7 +88,7 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(this, "Terjadi kesalahan: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
             },
-            Response.ErrorListener {
+            Response.ErrorListener{
                 Log.e("LoginActivity", "Volley error: $it")
                 Toast.makeText(this, "Terjadi kesalahan jaringan", Toast.LENGTH_SHORT).show()
             }
