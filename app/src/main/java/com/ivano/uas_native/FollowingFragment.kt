@@ -1,10 +1,20 @@
 package com.ivano.uas_native
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import org.json.JSONObject
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -20,6 +30,8 @@ class FollowingFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private lateinit var recyclerView: RecyclerView
+    var followings:ArrayList<ReadFollowingCerbung> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +46,38 @@ class FollowingFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_following, container, false)
+        val view = inflater.inflate(R.layout.fragment_following, container, false)
+        val q = Volley.newRequestQueue(activity)
+        val url = "https://ubaya.me/native/160421054/read-cerita-following.php"
+        var stringRequest = StringRequest(
+            Request.Method.POST, url, Response.Listener {
+                Log.d("apiresult", it)
+                val obj = JSONObject(it)
+                if(obj.getString("result")=="OK"){
+                    val data =obj.getJSONArray("data")
+                    val sType = object: TypeToken<List<ReadFollowingCerbung>>(){ }.type
+                    followings = Gson().fromJson(data.toString(), sType)as ArrayList<ReadFollowingCerbung>
+                    Log.d("apiresult", followings.toString())
+                }
+                updateList()
+                Log.d("cekisiarray", followings.toString())
+            },
+            Response.ErrorListener {
+                Log.e("apiresult", it.message.toString())
+            })
+        q.add(stringRequest)
+        recyclerView = view.findViewById(R.id.recycleFollowing)
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+    }
+    fun updateList() {
+        val lm = LinearLayoutManager(activity)
+        recyclerView.layoutManager = lm
+        recyclerView.setHasFixedSize(true)
+        recyclerView.adapter = FollowingAdapter(followings)
     }
 
     companion object {

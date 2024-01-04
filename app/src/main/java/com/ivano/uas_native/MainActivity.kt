@@ -11,6 +11,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding:ActivityMainBinding
     val fragment: ArrayList<Fragment> = ArrayList()
     val iduser = "1"
+    var judulCreate = ""
+    var descCreate = ""
+    var imgCreate = ""
+    var genreCreate = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -19,6 +23,7 @@ class MainActivity : AppCompatActivity() {
         fragment.add(HomeFragment())
         fragment.add(FollowingFragment())
         fragment.add(CreateFragment())
+        fragment.add(UsersFragment())
         fragment.add(PrefFragment())
 
         binding.viewPager.adapter = MyAdapter(this, fragment)

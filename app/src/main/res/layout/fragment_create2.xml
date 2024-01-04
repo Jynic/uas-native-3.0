@@ -2,8 +2,10 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".CreateFragment2">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -90,7 +92,7 @@
             app:layout_constraintTop_toBottomOf="@+id/txtFirstPara" />
 
         <Button
-            android:id="@+id/btnNextCreate2"
+            android:id="@+id/btnNextCreate"
             style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

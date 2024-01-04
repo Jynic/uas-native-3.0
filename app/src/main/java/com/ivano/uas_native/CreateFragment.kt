@@ -1,28 +1,16 @@
 package com.ivano.uas_native
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.TextView
+import android.widget.EditText
+import android.widget.Spinner
 import android.widget.Toast
-import androidx.fragment.app.ListFragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.ivano.uas_native.databinding.FragmentCreateBinding
-import com.ivano.uas_native.databinding.FragmentHomeBinding
-import com.ivano.uas_native.databinding.FragmentPrefBinding
-import org.json.JSONException
-import org.json.JSONObject
+import com.google.android.material.textfield.TextInputEditText
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,12 +22,10 @@ private const val ARG_PARAM2 = "param2"
  * Use the [CreateFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class CreateFragment : ListFragment() {
+class CreateFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    private lateinit var binding: FragmentCreateBinding
-    var ceritas:ArrayList<Cerita> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,67 +33,28 @@ class CreateFragment : ListFragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentCreateBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val btnNextCreate1 = view.findViewById<Button>(R.id.btnNextCreate1)
-        val id = (activity as MainActivity).iduser.toInt()
-
-        btnNextCreate1.setOnClickListener {
-            val title = binding.txtTitle.text.toString()
-            val desc = binding.txtDescCreate.text.toString()
-            val urlCreate = binding.txtUrlCreate.text.toString()
-            val genre = binding.spinGenre.selectedItem.toString()
-            CreateCerbung(id, title, desc, urlCreate, genre)
+        // Inflate the layout for this fragment
+        val view = inflater.inflate(R.layout.fragment_create4, container, false)
+        val btnNext = view.findViewById<Button>(R.id.btnNextCreate1)
+        val genre = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, Global.genre)
+        genre.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        view.findViewById<Spinner>(R.id.spinGenre).adapter = genre
+        btnNext.setOnClickListener{
+            (activity as MainActivity).judulCreate = view.findViewById<EditText>(R.id.txtJudulCreate).text.toString()
+            (activity as MainActivity).descCreate = view.findViewById<EditText>(R.id.txtDescCreate).text.toString()
+            (activity as MainActivity).imgCreate = view.findViewById<EditText>(R.id.txtUrlCreate).text.toString()
+            (activity as MainActivity).genreCreate = view.findViewById<Spinner>(R.id.spinGenre).selectedItem.toString()
+            Toast.makeText(this.context, view.findViewById<Spinner>(R.id.spinGenre).selectedItem.toString(), Toast.LENGTH_SHORT).show()
+            var fragment = CreateFragment2()
+            childFragmentManager.beginTransaction().replace(R.id.container, fragment).addToBackStack(null).commit()
         }
-    }
-
-    private fun CreateCerbung(idUser: Int, title:String, desc: String, urlCreate: String, genre: String) {
-        val q = Volley.newRequestQueue(requireContext())
-        val url = "https://ubaya.me/native/160421054/create-cerita.php"
-
-        val stringRequest = object : StringRequest(
-            Request.Method.POST, url,
-            { response ->
-                val obj = JSONObject(response)
-                if (obj.getString("result") == "OK") {
-                    // Password successfully updated
-                    Toast.makeText(requireContext(), "Cerita Added successfully", Toast.LENGTH_SHORT).show()
-                } else {
-                    // Handle the case where the password update failed
-                    Toast.makeText(requireContext(), "Failed to Add Cerita", Toast.LENGTH_SHORT).show()
-                }
-            },
-            { error ->
-                // Handle errors or exceptions here
-                Log.e("AddCeritaError", error.printStackTrace().toString())
-                Toast.makeText(requireContext(), "Error Creating Cerita", Toast.LENGTH_SHORT).show()
-            }
-        ) {
-            override fun getParams(): MutableMap<String, String>? {
-                val params = HashMap<String, String>()
-                params["id"] = idUser.toString()
-                params["title"] = title
-                params["desc"] = desc
-                params["url"] = urlCreate
-                params["genre"] = genre
-                return params
-            }
-        }
-
-        q.add(stringRequest)
+        return view
     }
 
     companion object {
