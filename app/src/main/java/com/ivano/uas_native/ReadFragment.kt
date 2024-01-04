@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -18,8 +19,6 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.ivano.uas_native.databinding.FragmentHomeBinding
-import com.ivano.uas_native.databinding.FragmentReadBinding
 import com.squareup.picasso.Picasso
 import org.json.JSONObject
 
@@ -58,11 +57,13 @@ class ReadFragment : Fragment() {
         // Inflate the layout for this fragment
 
         val view =  inflater.inflate(R.layout.fragment_read, container, false)
+        val btnsubmitpara = view.findViewById<Button>(R.id.btnSubmitPara)
         val idcerita = arguments?.getString("index_cerita").toString()
         val judul = arguments?.getString("judul_cerita").toString()
         val foto = arguments?.getString("foto_cerita").toString()
         val genre = arguments?.getString("genre_cerita").toString()
         val penulis = arguments?.getString("penulis_cerita").toString()
+        val iduser = (activity as MainActivity).iduser
         view.findViewById<TextView>(R.id.txtJudulCerbung).text = judul
         val imageView: ImageView = view.findViewById(R.id.image)
         Picasso.get().load(foto).into(imageView)
@@ -89,6 +90,35 @@ class ReadFragment : Fragment() {
             })
         p.add(stringRequest)
         recyclerView = view.findViewById(R.id.recycleViewParagraf)
+
+        btnsubmitpara.setOnClickListener{
+            val para = view.findViewById<EditText>(R.id.txtTambahPara).text.toString()
+            val url = "https://ubaya.me/native/160421054/create-paragraf.php"
+            val request = object : StringRequest(
+                Request.Method.POST, url,
+                Response.Listener<String> { response ->
+                    // Handle response dari server
+                    Toast.makeText(activity, response, Toast.LENGTH_SHORT).show()
+                },
+                Response.ErrorListener { error ->
+                    // Handle error
+                    Toast.makeText(activity, "Error: $error", Toast.LENGTH_SHORT).show()
+                }
+            ){
+                // Override metode untuk mengirim data ke server
+                override fun getParams(): Map<String, String> {
+                    val params = HashMap<String, String>()
+                    params["idcerita"] = idcerita
+                    params["paragraf"] = para
+                    params["iduser"] = iduser
+                    return params
+                }
+
+            }
+            Volley.newRequestQueue(activity).add(request)
+
+        }
+
         return view
 
 

@@ -36,13 +36,13 @@
                 android:id="@+id/radioRestricted"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Restricted \n(all approved users can contribute)" />
+                android:text="Restricted " />
 
             <RadioButton
                 android:id="@+id/radioPublic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Public \n(all users can contribute)" />
+                android:text="Public " />
         </RadioGroup>
 
         <TextView
