@@ -1,3 +1,4 @@
+
 package com.ivano.uas_native
 
 import android.content.Context
@@ -11,97 +12,126 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.ivano.uas_native.databinding.ActivityLoginBinding
 import org.json.JSONObject
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
+    var account: ArrayList<User> = ArrayList()
 
+    val IDACCOUNT = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
 
-        binding.btnLog.setOnClickListener {
-            try {
-                val username = binding.txtLoginName.text.toString()
-                val password = binding.txtLoginPass.text.toString()
-
-                if (username.isNotEmpty() && password.isNotEmpty()) {
-                    loginUser(username, password)
-                } else {
-                    Toast.makeText(this, "Masukkan Username dan Password", Toast.LENGTH_SHORT).show()
-                }
-            } catch (e: Exception) {
-                Toast.makeText(this, "Terjadi kesalahan: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        binding.txtReg.setOnClickListener {
-            val intent = Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
-    }
-
-    private fun loginUser(username: String, password: String) {
+        val t = Volley.newRequestQueue(this)
         val url = "https://ubaya.me/native/160421054/login.php"
+        var stringRequest = StringRequest(
+            Request.Method.POST, url,
+            Response.Listener<String> {
+                Log.d("apiresult", it)
+                val obj = JSONObject(it)
+                if (obj.getString("result") == "OK") {
+                    val data = obj.getJSONArray("data")
+//                    for (i in 0 until data.length()) {
+//                        val plyObj = data.getJSONObject(i)
+//                        val users = User(
+//                            plyObj.getInt("id"),
+//                            plyObj.getString("username"),
+//                            plyObj.getString("password"),
+//                            plyObj.getString("img_url")
+//                        )
+//                        account.add(users)
+//                    }
+                    val plyObj = data.getJSONObject(0)
+                    val users = User(
+                        plyObj.getInt("id"),
+                        plyObj.getString("username"),
+                        plyObj.getString("password"),
+                        plyObj.getString("img_url")
+                    )
+                    account.add(users)
+                }
+                Log.d("cekisiarray", account.toString())
+            },
+            Response.ErrorListener {
+                // Handle error here
+                Log.e("apiresult", it.message.toString())
+            }
+        )
+        t.add(stringRequest)
 
-        val stringRequest = object : StringRequest(
-            Request.Method.POST,
-            url,
-            Response.Listener<String> { response ->
-                try {
-                    val jsonObject = JSONObject(response)
-                    Log.d("LoginActivity", "Server response: $response")
-
-                    val result = jsonObject.getString("Result")
-                    if (result == "Success") {
-                        // Login berhasil
-                        Toast.makeText(this, "Login berhasil", Toast.LENGTH_SHORT).show()
-
-                        // Simpan User ID yang login
-                        val data = jsonObject.getJSONObject("Data")
-                        val idUser = data.getInt("id")
-
-                        var sharedFile = "com.ivano.uas_native"
-                        var shared: SharedPreferences = getSharedPreferences(sharedFile, Context.MODE_PRIVATE)
-                        var editor: SharedPreferences.Editor = shared.edit()
-                        editor.putInt("ID", idUser)
-                        editor.apply()
-
-
-
-
+        binding.btnLog.setOnClickListener {
+            var username = binding.txtLoginName.text.toString()
+            var password = binding.txtLoginPass.text.toString()
+            var status = false
+            Log.d("btnclick", account.toString())
+            if (username.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "$username Data cannot be empty", Toast.LENGTH_SHORT).show()
+            } else {
+                if (account.isNotEmpty()) {
+                    val user = account[0]
+                    if (user.username == username && user.password == password) {
+                        Toast.makeText(this, "$username Sign In Success", Toast.LENGTH_SHORT).show()
                         val intent = Intent(this, MainActivity::class.java)
+                        intent.putExtra(IDACCOUNT, user.id)
                         startActivity(intent)
                         finish()
                     } else {
-                        // Pesan kesalahan dari server
-                        val message = jsonObject.optString("message", "Tidak ada pesan kesalahan")
-                        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Username or Password is Incorrect", Toast.LENGTH_SHORT).show()
                     }
-                } catch (e: Exception) {
-                    Log.e("LoginActivity", "Error parsing JSON: ${e.message}")
-                    Toast.makeText(this, "Terjadi kesalahan: ${e.message}", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "No user data available", Toast.LENGTH_SHORT).show()
                 }
-            },
-            Response.ErrorListener{
-                Log.e("LoginActivity", "Volley error: $it")
-                Toast.makeText(this, "Terjadi kesalahan jaringan", Toast.LENGTH_SHORT).show()
             }
-        )
-        {
-            override fun getParams(): MutableMap<String, String> {
-                val params = HashMap<String, String>()
-                params["username"] = username
-                params["password"] = password
-                return params
-            }
+//            if(username.isEmpty() || password.isEmpty()){
+//                Toast.makeText(this,"${username} Data cannot be empty", Toast.LENGTH_SHORT).show()
+//
+//            }else{
+////                for(accounts in account){
+////                    if(accounts.username == username && accounts.password == password){
+////                        status = true
+////                        Toast.makeText(this, "${username} Sign In Success", Toast.LENGTH_SHORT).show()
+////                        val intent = Intent(this, MainActivity::class.java)
+////                        var idAccount = accounts.id
+////                        intent.putExtra(IDACCOUNT, idAccount)
+//////                        Global.id_user = idAccount
+////                        startActivity(intent)
+////                        finish()
+////                        break
+////                    }
+////                    else{
+////                        status = false
+////
+////                    }
+////                }
+//                if(account[0].username == username && account[0].password == password){
+//                    status = true
+//                    Toast.makeText(this, "${username} Sign In Success", Toast.LENGTH_SHORT).show()
+//                    val intent = Intent(this, MainActivity::class.java)
+//                    var idAccount = account[0].id
+//                    intent.putExtra(IDACCOUNT, idAccount)
+////                        Global.id_user = idAccount
+//                    startActivity(intent)
+//                    finish()
+//                }
+//                else{
+//                    status = false
+//
+//                }
+//                if(!status){
+//                    Toast.makeText(this,"Username or Password is Incorrect", Toast.LENGTH_SHORT).show()
+//                }
+//            }
         }
-        // Tambahkan request ke queue Volley
-        Volley.newRequestQueue(this).add(stringRequest)
+        binding.txtReg.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
+        }
     }
 }

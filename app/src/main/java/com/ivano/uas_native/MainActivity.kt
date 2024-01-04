@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         fragment.add(FollowingFragment())
         fragment.add(CreateFragment())
         fragment.add(UsersFragment())
+        fragment.add(FragmentPrefs2())
 
         binding.viewPager.adapter = MyAdapter(this, fragment)
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
