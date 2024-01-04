@@ -11,7 +11,7 @@ import com.ivano.uas_native.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
     private lateinit var binding:ActivityMainBinding
     val fragment: ArrayList<Fragment> = ArrayList()
-    var iduser:String? = "1"
+    val iduser = "1"
     var judulCreate = ""
     var descCreate = ""
     var imgCreate = ""
@@ -22,12 +22,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        iduser = intent.getStringExtra("id")
         fragment.add(HomeFragment())
         fragment.add(FollowingFragment())
         fragment.add(CreateFragment())
         fragment.add(UsersFragment())
-        fragment.add(FragmentPrefs2())
 
         binding.viewPager.adapter = MyAdapter(this, fragment)
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
